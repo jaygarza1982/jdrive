@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <title>
+        JD Rive
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <header>
+        <h2>
+            JD Rive - <a href="/home">{{username}}</a> / {{dir}}
+        </h2>
+    </header>
+    <main>
+        <div class="container">
+
+            <div class="row row-fix">
+                <div class="col-md-3">
+                    <form action="/file-upload/{{dir}}" method="POST" enctype="multipart/form-data">  
+                        <input type="file" class="custom-file-input" id="jd-files-id" name="jd-files"
+                            onchange="displayFilesToUpload(this)" multiple>
+                        <label class="custom-file-label" for="jd-files">Choose files</label>
+
+                        <input style="margin-left: -14px;" class="btn btn-primary" type="submit" value="Upload files">
+                    </form>
+                </div>
+                
+                <div class="col-md-3">
+                    <form action="/new-folder" method="POST">
+                        <input type="text" name="folder-name" id="folder-name">
+                        <input class="btn btn-primary" type="submit" value="Make new folder">
+                    </form>
+                </div>
+            </div>
+
+            <div id="jd-files-to-upload" class="row-row-fix"></div>
+
+            <div class="row row-fix file-listings">
+                {% for key in files %}
+                    <div class="col-md-12 file">
+                        <a href="/file-download/{{key.name}}">
+                            {{key.name}}
+                        </a>
+                        <p>
+                            {{ key.crc }}
+                        </p>
+                        <p>
+                            Last modified: {{ key.last_modified }}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
+</html>
