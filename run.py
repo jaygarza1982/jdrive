@@ -9,9 +9,6 @@ app.config['UPLOAD_FOLDER'] = '.'
 
 app.config['users'] = 'users'
 
-#File download API will give a cookie so that the user can download the file later
-temp_api_cookies = dict()
-
 @app.route('/<path:path>')
 def static_proxy(path):
     return send_from_directory('public', path)
@@ -168,24 +165,10 @@ def index_file_download_api(file):
     if user.login(password):
         if not os.path.isdir('{users}/{username}/{file}'.format(username=username, file=file, users=app.config['users'])):
             path = os.path.join('{users}/{username}'.format(username=username, users=app.config['users']), file)
-            temp_cookie = str(os.urandom(16))
-            temp_api_cookies[temp_cookie] = path
 
-            # return temp_api_cookies[temp_cookie]
             return send_file(path)
         return '{file} is a directory'.format(file=file)
     abort(403)
-
-# @app.route('/file-download-api', methods=['GET'])
-# def index_file_download_get_api():
-#     cookie = request.args.get['token']
-
-#     if cookie in temp_api_cookies:
-#         path = temp_api_cookies[cookie]
-#         temp_api_cookies[cookie] = ''
-#         return send_file(path)
-#     else:
-#         return 'Invalid cookie: {cookie}'.format(cookie)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=3005)
