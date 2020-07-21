@@ -24,3 +24,5 @@ print(login_tests.login_invalid_credentials('test123', '124'), 'Login invalid cr
 
 file_tests = FileTests(users)
 print(file_tests.file_upload_success('test123', '123', 'test1.txt'), 'Uploading test1.txt')
+print(file_tests.multiple_file_upload_success('test123', '123', ['jdrive.png', 'utah.jpg']), 'Uploading multiple files: jdrive.png, utah.jpg')
+print(file_tests.file_download_success('test123', '123', 'jdrive.png'), 'File download test jdrive.png')

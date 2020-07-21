@@ -1,5 +1,5 @@
 from run import app
-import os
+import os, hashlib
 
 class FileTests:
     def __init__(self, users):
@@ -8,7 +8,7 @@ class FileTests:
 
     def file_upload_success(self, username, password, filename):
         #Login first so we have a cookie
-        login = self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
+        self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
 
         files = []
         files.append((open('test_files/{filename}'.format(filename=filename), 'rb'), filename,))
@@ -17,6 +17,46 @@ class FileTests:
             'jd-files': files,
         }
         
-        upload_post = self.test_app.post('/file-upload/root'.format(filename=filename), content_type='multipart/form-data', data=data, follow_redirects=True)
+        self.test_app.post('/file-upload/root'.format(filename=filename), content_type='multipart/form-data', data=data, follow_redirects=True)
         # print(upload_post.data)
         return os.path.isfile('{users}/{username}/{filename}'.format(users=app.config['users'], username=username, filename=filename))
+
+    def multiple_file_upload_success(self, username, password, filenames):
+        #Login first so we have a cookie
+        self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
+
+        #Append open and filename as a tuple into files
+        files = []
+        for filename in filenames:
+            files.append((open('test_files/{filename}'.format(filename=filename), 'rb'), filename,))
+
+        #Set the data for our post request
+        data = {
+            'jd-files': files,
+        }
+
+        #Send a post request uploading multiple files
+        self.test_app.post('/file-upload/root'.format(filename=filename), content_type='multipart/form-data', data=data, follow_redirects=True)
+        
+        #List files from test_files directory, check that each uploaded file made it into the directory of user
+        #If a name is not found, the upload has failed
+        listing = os.listdir('test_files')
+        for filename in filenames:
+            if not filename in listing:
+                return False
+
+        return True
+
+    def file_download_success(self, username, password, filename):
+        #Login first so we have a cookie
+        self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
+
+        #Request the file
+        download_get = self.test_app.get('/file-download/{filename}'.format(filename=filename))
+
+        #Calculate the SHA256 of both the file in the test_files dir and from the get request
+        sha_downloaded = hashlib.sha256(download_get.data).hexdigest()
+        sha_test_file = hashlib.sha256(open('test_files/{filename}'.format(filename=filename), 'rb').read()).hexdigest()
+
+        #Return if they are both equal
+        return sha_downloaded == sha_test_file
