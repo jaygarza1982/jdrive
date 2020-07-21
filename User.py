@@ -11,10 +11,13 @@ class User:
         self.secret_files = ['passwd - ', 'salt - ']
 
     def login(self, passwd):
-        hash = self.read_file('passwd - ')
-        salt = self.read_file('salt - ')
+        if os.path.exists(self.path):
+            hash = self.read_file('passwd - ')
+            salt = self.read_file('salt - ')
 
-        return self.get_hash(passwd, salt) == hash
+            return self.get_hash(passwd, salt) == hash
+        else:
+            return False
 
     def register(self, passwd):
         if not os.path.exists(self.path):

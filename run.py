@@ -61,10 +61,11 @@ def index_home(path):
 
 @app.route('/file-upload/<dir>', methods=['POST'])
 def index_file_upload(dir):
+    # print(request.files.getlist('jd-files'))
     login_cookie = request.cookies['login']
     username = session[login_cookie]
 
-    print(dir)
+    # print(dir)
     for file in request.files.getlist('jd-files'):
         # TODO: Add secure filename with spaces and other characters allowed
         filename = (file.filename)
@@ -171,4 +172,8 @@ def index_file_download_api(file):
     abort(403)
 
 if __name__ == '__main__':
+    #Create the users directory if it does not exist
+    if not os.path.exists(app.config['users']):
+        os.mkdir(app.config['users'])
+        
     app.run('0.0.0.0', port=3005)
