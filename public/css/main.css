@@ -35,6 +35,10 @@ body {
     border-radius: 7px;
 }
 
+.file {
+    padding: 10px 15px;
+}
+
 .file-listings > div:not(:first-child) {
-    border-top: 1px solid black;
+    border-top: 1px solid #cecece;
 }

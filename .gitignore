@@ -2,3 +2,4 @@ users/*
 test_users/*
 __pycache__*
 __pycache__/*
+.vscode/*

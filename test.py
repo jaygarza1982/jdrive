@@ -46,3 +46,6 @@ print(file_tests.file_download_fail_secret('test123', '123', 'passwd - ', 'Reque
 print(file_tests.file_download_fail_secret('test123', '123', 'salt - ', 'Requesting a secret file "salt -'), 'File download test salt - ')
 print(file_tests.file_download_success('test123', '123', 'testing dir/testing file.txt'), 'File in directory')
 print(file_tests.file_download_success('test123', '123', 'testing dir/folder in testing dir/testing file in testing dir.txt'), 'File in nested directory')
+print(file_tests.file_download_api_success('test123', '123', 'jdrive.png'), 'File API download jdrive.png')
+print(file_tests.file_download_api_success('test123', '123', 'utah.jpg'), 'File API download utah.jpg')
+print(file_tests.file_download_api_bad_credentials('test123', '1233', 'utah.jpg'), 'File API bad credentials utah.jpg')
