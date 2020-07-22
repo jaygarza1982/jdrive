@@ -52,7 +52,7 @@ class FileTests:
         self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
 
         #Request the file
-        download_get = self.test_app.get('/file-download/{filename}'.format(filename=filename))
+        download_get = self.test_app.get('/home/{filename}'.format(filename=filename), follow_redirects=True)
 
         #Calculate the SHA256 of both the file in the test_files dir and from the get request
         sha_downloaded = hashlib.sha256(download_get.data).hexdigest()
@@ -60,3 +60,12 @@ class FileTests:
 
         #Return if they are both equal
         return sha_downloaded == sha_test_file
+
+    def file_download_fail_secret(self, username, password, filename, message):
+        #Login first so we have a cookie
+        self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)
+
+        #Request the file
+        download_get = self.test_app.get('/home/{filename}'.format(filename=filename), follow_redirects=True)
+
+        return message in str(download_get.data)

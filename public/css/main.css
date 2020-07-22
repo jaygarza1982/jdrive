@@ -13,7 +13,7 @@ p {
 }
 
 body {
-    font-size: 1.4rem;
+    font-size: 1rem;
     word-break: break-word;
 }
 
@@ -31,9 +31,10 @@ body {
 }
 
 .file-listings {
-    margin-top: 20px;
+    border: 1px solid #007bff;
+    border-radius: 7px;
 }
 
-.file {
-    margin-bottom: 25px;
+.file-listings > div:not(:first-child) {
+    border-top: 1px solid black;
 }

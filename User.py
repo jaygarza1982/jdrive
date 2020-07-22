@@ -1,6 +1,8 @@
 import os, hashlib, time
 import datetime
 
+from flask import send_file
+
 class User:
     
 
@@ -40,6 +42,22 @@ class User:
     def read_file(self, filename):
         file_path = '{path}/{filename}'.format(username=self.username, filename=filename, path=self.path)
         return open(file_path, 'rb').read()
+
+    def return_file(self, path, attachment):
+        file_to_send = os.path.join('{users}/{username}'.format(username=self.username, users=self.users), path)
+
+        #Check to make sure we are not sending a directory
+        if os.path.isdir(file_to_send):
+            return 'You are trying to download a directory.'
+
+        #Before sending a file, check the file name to see if we are sending a secret file
+        filename = str(path).split('/')[-1]
+
+        for secret_file in self.secret_files:
+            if filename == secret_file:
+                return 'Requesting a secret file "{filename}". This is not allowed.'.format(filename=filename)
+
+        return send_file(file_to_send, as_attachment=attachment)
 
     def list_files(self, dir=''):
         if dir == 'root':

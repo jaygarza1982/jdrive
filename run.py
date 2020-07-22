@@ -48,11 +48,16 @@ def index_register():
 
 @app.route('/home', defaults={'path': ''})
 @app.route('/home/', defaults={'path': ''})
-@app.route('/home/<path>')
+@app.route('/home/<path:path>')
 def index_home(path):
     login_cookie = request.cookies['login']
     username = session[login_cookie]
     user = User(app.config['users'], username)
+
+    possible_file = '{users}/{username}/{path}'.format(users=app.config['users'], username=username, path=path)
+    # print(possible_file, os.path.isfile(possible_file))
+    if os.path.isfile(possible_file):
+        return redirect('/file-download/{path}'.format(path=path))
     
     if path == '':
         return render_template('home.html', username=username, files=user.list_files(), dir='root')
@@ -77,17 +82,16 @@ def index_file_upload(dir):
     
     return redirect('/home/{dir}'.format(dir=dir))
 
-@app.route('/file-download/<file>')
-def index_file_download(file):
+@app.route('/file-download/<path:path>')
+def index_file_download(path):
     login_cookie = request.cookies['login']
     username = session[login_cookie]
 
-    if not os.path.isdir('{users}/{username}/{file}'.format(username=username, file=file, users=app.config['users'])):
-        return send_file(os.path.join('{users}/{username}'.format(username=username, users=app.config['users']), file), as_attachment=True)
-
     user = User(app.config['users'], username)
 
-    return render_template('home.html', username=username, files=user.list_files(dir=file), dir=file)
+    #Send file as attachment
+    return user.return_file(path, True)
+
 
 @app.route('/file-upload-api', methods=['POST'])
 def index_file_upload_api():

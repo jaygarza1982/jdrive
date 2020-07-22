@@ -6,8 +6,8 @@
     </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/main.css">
-    <script src="../js/main.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/main.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -44,9 +44,15 @@
             <div class="row row-fix file-listings">
                 {% for key in files %}
                     <div class="col-md-12 file">
-                        <a href="/file-download/{{key.name}}">
-                            {{key.name}}
-                        </a>
+                        {% if dir == 'root' %}
+                            <a href="/home/{{key.name}}">
+                                {{key.name}}
+                            </a>
+                        {% else %}
+                            <a href="/home/{{dir}}/{{key.name}}">
+                                {{key.name}}
+                            </a>
+                        {% endif %}
                         <p>
                             {{ key.crc }}
                         </p>
