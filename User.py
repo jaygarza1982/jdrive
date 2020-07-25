@@ -3,21 +3,31 @@ import datetime
 
 from flask import send_file
 
+from UserLog import UserLog
+
 class User:
     
 
     def __init__(self, users, username):
         self.username = username
         self.users = users
-        self.path = '{users}/{username}'.format(username=username, users=self.users)
-        self.secret_files = ['passwd - ', 'salt - ']
+        self.path = '{users}/{username}'.format(username=username, users=users)
+        self.user_log = UserLog(users, username)
+        self.secret_files = ['passwd - ', 'salt - ', 'log - ']
 
     def login(self, passwd):
         if os.path.exists(self.path):
             hash = self.read_file('passwd - ')
             salt = self.read_file('salt - ')
 
-            return self.get_hash(passwd, salt) == hash
+            auth = self.get_hash(passwd, salt) == hash
+
+            if auth:
+                self.user_log.login_success()
+            else:
+                self.user_log.login_failure()
+
+            return auth
         else:
             return False
 
@@ -31,7 +41,8 @@ class User:
             self.write_file('passwd', '', hash)
             self.write_file('salt', '', salt)
 
-            print('Registering {username}.'.format(username=self.username))
+            # print('Registering {username}.'.format(username=self.username))
+            self.user_log.register()
             return True
         return False
 
@@ -56,7 +67,8 @@ class User:
         for secret_file in self.secret_files:
             if filename == secret_file:
                 return 'Requesting a secret file "{filename}". This is not allowed.'.format(filename=filename)
-
+        
+        self.user_log.return_file(file_to_send)
         return send_file(file_to_send, as_attachment=attachment)
 
     def list_files(self, dir=''):

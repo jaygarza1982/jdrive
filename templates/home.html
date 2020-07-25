@@ -22,12 +22,19 @@
 
             <div class="row row-fix">
                 <div class="col-md-3">
-                    <form action="/file-upload/{{dir}}" method="POST" enctype="multipart/form-data">  
-                        <input type="file" class="custom-file-input" id="jd-files-id" name="jd-files"
-                            onchange="displayFilesToUpload(this)" multiple>
-                        <label class="custom-file-label" for="jd-files">Choose files</label>
-
-                        <input style="margin-left: -14px;" class="btn btn-primary" type="submit" value="Upload files">
+                    <form action="/file-upload/{{dir}}" method="POST" enctype="multipart/form-data">
+                        <input type="file" class="custom-file-input" id="jd-files-id" name="jd-files" onchange="displayFilesToUpload(this)"
+                            multiple style="display: none;">
+                        <label class="custom-file-label" for="jd-files" style="display: none;">Choose files</label>
+                        <svg class="svg-icon" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg" onclick="iconAddClick()">
+                            <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z">
+                            </path>
+                            <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"></path>
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        </svg>
+                        <p>Add files</p>
+                        <input style="margin-left: -14px; display: none;" id="btn-upload-files" class="btn btn-primary" type="submit" value="Upload files">
                     </form>
                 </div>
                 
@@ -40,7 +47,6 @@
             </div>
 
             <div id="jd-files-to-upload" class="row-row-fix"></div>
-
             <div class="row row-fix file-listings">
                 {% for key in files %}
                     <div class="col-md-12 file">

@@ -10,6 +10,7 @@ input {
 
 p {
     margin-bottom: 0;
+    color: #797979;
 }
 
 body {
@@ -41,4 +42,15 @@ body {
 
 .file-listings > div:not(:first-child) {
     border-top: 1px solid #cecece;
+}
+
+.svg-icon {
+    width: 3rem;
+    height: auto;
+    color: #007bff;
+    transition: color 250ms ease-in;
+}
+
+.svg-icon:hover {
+    color: #0069d9;
 }

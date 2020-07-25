@@ -9,4 +9,10 @@ function displayFilesToUpload(fileContainer) {
     }
 
     fileList.innerHTML = newHTML;
+
+    document.getElementById('btn-upload-files').style.display = '';
+}
+
+function iconAddClick() {
+    document.getElementById('jd-files-id').click();
 }

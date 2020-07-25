@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, send_from_directory, request, redirect, session, send_file, abort
 from werkzeug.utils import secure_filename
 from User import User
+from Admin import Admin
 import os
 from datetime import datetime
 
@@ -9,6 +10,11 @@ app.secret_key = os.environ['jdsecret']
 app.config['UPLOAD_FOLDER'] = '.'
 
 app.config['users'] = 'users'
+app.config['admins'] = '.admins'
+
+#If admins file does not exist, create it
+if not os.path.exists(app.config['admins']):
+    open(app.config['admins'], 'w').close()
 
 def humanize_ts(time, timestamp=False):
     #If we cannot convert the time, skip
@@ -139,6 +145,19 @@ def index_file_download(path):
     #Send file as attachment
     return user.return_file(path, True)
 
+#----- Admin paths -----
+
+@app.route('/admin-view-logs/<user_passed>')
+def index_admin_view_logs(user_passed):
+    login_cookie = request.cookies['login']
+    username = session[login_cookie]
+    admin = Admin(app.config['admins'], username)
+
+    user_to_read = User(app.config['users'], user_passed)
+    return render_template('user-log.html', username=user_passed, logs=admin.read_log(user_to_read))
+
+
+#----- API paths -----
 
 @app.route('/file-upload-api', methods=['POST'])
 def index_file_upload_api():
