@@ -168,7 +168,12 @@ def index_file_upload_api():
     if user.login(password):
         file = request.files.getlist('jd-files')[0]
         filename = file.filename
-        file.save(os.path.join('{users}/{username}'.format(username=username, users=app.config['users']), filename))
+        user_dir = '{users}/{username}'.format(username=username, users=app.config['users'])
+        path_to_save = os.path.join(user_dir, filename)
+
+        #Do not override a directory when uploading
+        if not os.path.isdir(path_to_save):
+            file.save(path_to_save)
     else:
         return 'Invalid username or password.'
 

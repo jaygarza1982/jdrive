@@ -54,3 +54,11 @@ body {
 .svg-icon:hover {
     color: #0069d9;
 }
+
+.fx-hover-up:hover {
+    transform: translateY(-5px);
+}
+
+.fx-hover-up {
+    transition: transform 300ms ease-out;
+}
