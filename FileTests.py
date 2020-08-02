@@ -21,6 +21,24 @@ class FileTests:
         # print(upload_post.data)
         return os.path.isfile('{users}/{username}/{filename}'.format(users=app.config['users'], username=username, filename=filename))
 
+    def file_upload_api_success(self, username, password, filename):
+        files = []
+        files.append((open('test_files/{filename}'.format(filename=filename), 'rb'), filename,))
+        
+        #Add username and password to API for authentication
+        data = {
+            'username': username,
+            'password': password,
+            'jd-files': files,
+        }
+
+        self.test_app.post('/file-upload-api', data=data)
+
+        return os.path.isfile('{users}/{username}/{filename}'.format(users=app.config['users'], username=username, filename=filename))
+
+    def file_upload_api_invalid_credentials(self, username, password, filename):
+        return not self.file_upload_api_success(username, password, filename)
+
     def multiple_file_upload_success(self, username, password, filenames):
         #Login first so we have a cookie
         self.test_app.post('/login', data={'jd-username': username, 'jd-password': password}, follow_redirects=True)

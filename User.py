@@ -4,6 +4,7 @@ import datetime
 from flask import send_file
 
 from UserLog import UserLog
+from Hasher import Hasher
 
 class User:
     
@@ -20,7 +21,7 @@ class User:
             hash = self.read_file('passwd - ')
             salt = self.read_file('salt - ')
 
-            auth = self.get_hash(passwd, salt) == hash
+            auth = Hasher.get_hash(passwd, salt) == hash
 
             if auth:
                 self.user_log.login_success()
@@ -34,7 +35,7 @@ class User:
     def register(self, passwd):
         if not os.path.exists(self.path):
             os.mkdir(self.path)
-            hash_salt = self.get_hash_and_salt(passwd)
+            hash_salt = Hasher.get_hash_and_salt(passwd)
             hash = hash_salt[0]
             salt = hash_salt[1]
 
@@ -103,29 +104,3 @@ class User:
                 # print(file, file_listings[-1]['last_modified'])
 
         return file_listings
-
-    # Get a hash and a salt
-    def get_hash_and_salt(self, password):
-        salt = os.urandom(128)  # Remember this
-
-        key = hashlib.pbkdf2_hmac(
-            'sha256',  # The hash digest algorithm for HMAC
-            password.encode('utf-8'),  # Convert the password to bytes
-            salt,  # Provide the salt
-            100000,  # It is recommended to use at least 100,000 iterations of SHA-256
-            dklen=128  # Get a 128 byte key
-        )
-
-        return (key, salt,)
-
-    # Get a hash with a salt
-    def get_hash(self, password, salt):
-        hash = hashlib.pbkdf2_hmac(
-            'sha256',  # The hash digest algorithm for HMAC
-            password.encode('utf-8'),  # Convert the password to bytes
-            salt,  # Provide the salt
-            100000,  # It is recommended to use at least 100,000 iterations of SHA-256
-            dklen=128  # Get a 128 byte key
-        )
-
-        return hash

@@ -43,10 +43,12 @@ print(login_tests.login_success('test123', '123'), 'Login success')
 print(login_tests.login_invalid_credentials('test321', '123'), 'Login invalid username')
 print(login_tests.login_invalid_credentials('test123', '124'), 'Login invalid credentials')
 
-#File download tests
+#File upload and download tests
 file_tests = FileTests(users)
 print(file_tests.file_upload_success('test123', '123', 'test1.txt'), 'Uploading test1.txt')
 print(file_tests.multiple_file_upload_success('test123', '123', ['jdrive.png', 'utah.jpg']), 'Uploading multiple files: jdrive.png, utah.jpg')
+print(file_tests.file_upload_api_invalid_credentials('test123', '233', 'test-api-fail-upload.txt'), 'File upload API success')
+print(file_tests.file_upload_api_success('test123', '123', 'test-api-upload.txt'), 'File upload API invalid credentials')
 print(file_tests.file_download_success('test123', '123', 'jdrive.png'), 'File download test jdrive.png')
 print(file_tests.file_download_fail_secret('test123', '123', 'passwd - ', 'Requesting a secret file "passwd -'), 'File download test passwd - ')
 print(file_tests.file_download_fail_secret('test123', '123', 'salt - ', 'Requesting a secret file "salt -'), 'File download test salt - ')
