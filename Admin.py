@@ -1,5 +1,6 @@
 from User import User
 from UserLog import UserLog
+from AdminReader import AdminReader
 
 class Admin(User):
     def __init__(self, admins, username):
@@ -7,9 +8,8 @@ class Admin(User):
         self.admins = admins
     
     def _auth(self):
-        #Check if is admin in admins file
-        with open(self.admins, 'r') as admin_file:
-            return self.username in admin_file.readlines()
+        reader = AdminReader(self.admins)
+        return self.username in reader.get_admins()
 
     def read_log(self, user):
         user_log = UserLog(user.users, user.username)
