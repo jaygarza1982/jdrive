@@ -1,6 +1,6 @@
-from User import User
-from UserLog import UserLog
-from AdminReader import AdminReader
+from packages.models.User import User
+from packages.services.UserLog import UserLog
+from packages.services.AdminReader import AdminReader
 
 class Admin(User):
     def __init__(self, admins, username):

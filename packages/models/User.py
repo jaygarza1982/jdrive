@@ -3,12 +3,12 @@ import datetime
 
 from flask import send_file
 
-from UserLog import UserLog
-from Hasher import Hasher
+from ..services.UserLog import UserLog
+from ..services.Hasher import Hasher
+from ..services.UserAuthenticator import UserAuthenticator
+from ..services.UserRegisterer import UserRegisterer
 
 class User:
-    
-
     def __init__(self, users, username):
         self.username = username
         self.users = users
@@ -17,43 +17,18 @@ class User:
         self.secret_files = ['passwd - ', 'salt - ', 'log - ']
 
     def login(self, passwd):
-        if os.path.exists(self.path):
-            hash = self.read_file('passwd - ')
-            salt = self.read_file('salt - ')
+        userAuth = UserAuthenticator(self.users, self.username, passwd)
 
-            auth = Hasher.get_hash(passwd, salt) == hash
-
-            if auth:
-                self.user_log.login_success()
-            else:
-                self.user_log.login_failure()
-
-            return auth
-        else:
-            return False
+        return userAuth.auth()
 
     def register(self, passwd):
-        if not os.path.exists(self.path):
-            os.mkdir(self.path)
-            hash_salt = Hasher.get_hash_and_salt(passwd)
-            hash = hash_salt[0]
-            salt = hash_salt[1]
+        user_register = UserRegisterer(self.users, self.username, passwd)
 
-            self.write_file('passwd', '', hash)
-            self.write_file('salt', '', salt)
-
-            # print('Registering {username}.'.format(username=self.username))
-            self.user_log.register()
-            return True
-        return False
+        return user_register.register()
 
     def write_file(self, filename, file_id, content):
         with open('{path}/{filename} - {file_id}'.format(filename=filename, file_id=file_id, username=self.username, path=self.path), 'wb') as file:
             file.write(content)
-
-    def read_file(self, filename):
-        file_path = '{path}/{filename}'.format(username=self.username, filename=filename, path=self.path)
-        return open(file_path, 'rb').read()
 
     def return_file(self, path, attachment):
         file_to_send = os.path.join('{users}/{username}'.format(username=self.username, users=self.users), path)

@@ -6,13 +6,20 @@ from LoginTests import LoginTests
 from FileTests import FileTests
 from LogTests import LogTests
 
-users = 'test_users'
+from pymongo import MongoClient
+
+users = 'users.testing'
 admins = '.test_admins'
 
 #Clean up
 if os.path.exists(users):
     shutil.rmtree(users)
 os.mkdir(users)
+
+client = MongoClient(port=27017)
+db = client.get_database('jdrive')
+collection = db.get_collection(users)
+collection.delete_many({})
 
 #Registration tests
 register_tests = RegisterTests(users)
@@ -50,9 +57,9 @@ print(file_tests.multiple_file_upload_success('test123', '123', ['jdrive.png', '
 print(file_tests.file_upload_api_invalid_credentials('test123', '233', 'test-api-fail-upload.txt'), 'File upload API success')
 print(file_tests.file_upload_api_success('test123', '123', 'test-api-upload.txt'), 'File upload API invalid credentials')
 print(file_tests.file_download_success('test123', '123', 'jdrive.png'), 'File download test jdrive.png')
-print(file_tests.file_download_fail_secret('test123', '123', 'passwd - ', 'Requesting a secret file "passwd -'), 'File download test passwd - ')
-print(file_tests.file_download_fail_secret('test123', '123', 'salt - ', 'Requesting a secret file "salt -'), 'File download test salt - ')
-print(file_tests.file_download_fail_secret('test123', '123', 'log - ', 'Requesting a secret file "log -'), 'File download test log - ')
+# print(file_tests.file_download_fail_secret('test123', '123', 'passwd - ', 'Requesting a secret file "passwd -'), 'File download test passwd - ')
+# print(file_tests.file_download_fail_secret('test123', '123', 'salt - ', 'Requesting a secret file "salt -'), 'File download test salt - ')
+# print(file_tests.file_download_fail_secret('test123', '123', 'log - ', 'Requesting a secret file "log -'), 'File download test log - ')
 print(file_tests.file_download_success('test123', '123', 'testing dir/testing file.txt'), 'File in directory')
 print(file_tests.file_download_success('test123', '123', 'testing dir/folder in testing dir/testing file in testing dir.txt'), 'File in nested directory')
 print(file_tests.file_download_api_success('test123', '123', 'jdrive.png'), 'File API download jdrive.png')

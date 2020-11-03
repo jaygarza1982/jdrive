@@ -1,4 +1,4 @@
-from run import app
+from app import app
 import os, hashlib
 
 class FileTests:

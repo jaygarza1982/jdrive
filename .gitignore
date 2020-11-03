@@ -1,6 +1,10 @@
 users/*
+users.testing/*
 test_users/*
 __pycache__*
 __pycache__/*
 .vscode/*
 .admins
+slnx.sqlite
+VSWorkspaceState.json
+.suo

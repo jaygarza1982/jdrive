@@ -1,4 +1,4 @@
-from run import app
+from app import app
 
 class LoginTests:
     def __init__(self, users):

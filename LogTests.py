@@ -1,6 +1,6 @@
-from run import app
+from app import app
 
-from UserLog import UserLog
+from packages.services.UserLog import UserLog
 from FileTests import FileTests
 
 class LogTests:
